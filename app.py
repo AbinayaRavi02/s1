@@ -10,15 +10,15 @@ app = Flask(__name__)
 # Load models and encoders
 # =============================
 try:
-    with open("naive_bayes.pkl", "rb") as f:
+    with open("naive_bayes .pkl", "rb") as f:
         nb_model = pickle.load(f)
-    with open("svm_model.pkl", "rb") as f:
+    with open("svm_model .pkl", "rb") as f:
         svm_model = pickle.load(f)
-    with open("preprocessor_nb.pkl", "rb") as f:
+    with open("preprocessor_nb .pkl", "rb") as f:
         preprocessor_nb = pickle.load(f)
-    with open("preprocessor_svm.pkl", "rb") as f:
+    with open("preprocessor_svm .pkl", "rb") as f:
         preprocessor_svm = pickle.load(f)
-    with open("label_encoder.pkl", "rb") as f:
+    with open("label_encoder .pkl", "rb") as f:
         label_encoder = pickle.load(f)
 except Exception as e:
     print("Model or preprocessor load failed:", e)
