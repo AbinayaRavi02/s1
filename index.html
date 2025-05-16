@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Government Scheme Predictor</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+    h1 { text-align: center; }
+    form, .chatbox {
+      max-width: 600px; margin: 20px auto;
+      background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label { margin-top: 10px; display: block; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .results { background: #dff0d8; padding: 15px; margin-top: 20px; border-radius: 8px; }
+    .messages { max-height: 300px; overflow-y: auto; margin-top: 10px; }
+    .message { margin: 5px 0; }
+    .user { text-align: right; color: #007bff; }
+    .bot { text-align: left; color: #28a745; }
+  </style>
+</head>
+<body>
+
+<h1>Government Scheme Predictor</h1>
+
+<form method="POST" action="/predict">
+  <label>Age:</label>
+  <input type="number" name="Age" required>
+  <label>Gender:</label>
+  <select name="Gender" required>
+    <option>Male</option><option>Female</option><option>Other</option>
+  </select>
+  <label>Category:</label>
+  <select name="Category" required>
+    <option>General</option><option>OBC</option><option>SC</option><option>ST</option>
+  </select>
+  <label>Disability:</label>
+  <select name="Disability" required>
+    <option>No</option><option>Yes</option>
+  </select>
+  <label>Employment:</label>
+  <select name="Employment" required>
+    <option>Unemployed</option><option>Self-Employed</option><option>Employed</option>
+  </select>
+  <label>Education:</label>
+  <select name="Education" required>
+    <option>None</option><option>Primary</option><option>Secondary</option><option>Higher Secondary</option><option>Undergraduate</option><option>Postgraduate</option>
+  </select>
+  <label>Income:</label>
+  <input type="number" name="Income" required>
+  <label>Area:</label>
+  <select name="Area" required>
+    <option>Urban</option><option>Rural</option>
+  </select>
+  <label>Marital Status:</label>
+  <select name="Marital_Status" required>
+    <option>Single</option><option>Married</option>
+  </select>
+  <button type="submit">Predict Scheme</button>
+</form>
+
+<div class="results">
+  <h3>Predicted Schemes:</h3>
+  <p><strong>Top schemes:</strong> {{ prediction_nb }}</p>
+  <p><strong>Best scheme:</strong> {{ prediction_svm }}</p>
+</div>
+
+
+<div class="chatbox">
+  <h3>🤖 Scheme Chatbot</h3>
+  <div class="messages" id="messages"></div>
+  <input type="text" id="userInput" placeholder="Ask about a scheme..." autocomplete="off" style="width: 100%; padding: 10px;">
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+    if (!text) return;
+    const msgBox = document.getElementById("messages");
+    msgBox.innerHTML += `<div class="message user">${text}</div>`;
+    input.value = '';
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    msgBox.innerHTML += `<div class="message bot">${data.reply}</div>`;
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+  document.getElementById("userInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") sendMessage();
+  });
+</script>
+
+</body>
+</html>
